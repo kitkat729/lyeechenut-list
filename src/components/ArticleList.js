@@ -13,6 +13,11 @@ const styles = theme => ({
     display: 'flex',
     flexWrap: 'wrap',
     margin: 'auto',
+  },
+  [theme.breakpoints.up('sm')]: {
+    root: {
+      maxWidth: 809
+    }
   }
 })
 
