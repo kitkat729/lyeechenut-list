@@ -19,7 +19,7 @@ const styles = theme => ({
     flex: '1 0 auto',
   },
   thumbnail: {
-    width: 400,
+    width: 368, // this value is relative to list.width - listitem.padding. It can be calculated if theme contains the relative value
     height: 150,
   }
 })
