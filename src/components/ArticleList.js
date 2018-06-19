@@ -10,7 +10,10 @@ const styles = theme => ({
   root: {
     width: '100%',
     maxWidth: 400,
-  },
+    display: 'flex',
+    flexWrap: 'wrap',
+    margin: 'auto',
+  }
 })
 
 function getListItem(item) {
