@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import axios from 'axios'
 import moment from 'moment'
 import ArticleList from '../components/ArticleList'
 
@@ -15,13 +16,44 @@ export default class ArticleListContainer extends Component {
   }
 
   componentDidMount() {
+    if (this.props.url) {
+      this.fetch(this.props.url, function(items) {
+        this.add(items)
 
+        if (this.state.filterArray.length > 0) {
+          this.filter(this.state.filterArray)
+        }
+        
+        if (this.state.sortField) {
+          this.sort({
+            field: this.state.sortField,
+            order: this.state.sortOrder,
+          })
+        }
+      }.bind(this))
+    }
   }
 
   add(items) {
     this.setState({
       items: this.state.items.concat(items)
     })
+  }
+
+  fetch(url, callback) {
+    axios.get(this.props.url)
+      .then( res => {
+        const articles = res.data
+
+        if (articles.status) {
+          let items = articles.data.list.map( item => {
+            item.thumbnail = '//assets3.thrillist.com/v1/image/'+item.image_id
+            return item
+          })
+
+          callback(items)
+        }
+      })
   }
 
   sort(options) {
