@@ -1,4 +1,5 @@
 import React from 'react'
+//import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
@@ -21,6 +22,9 @@ const styles = theme => ({
   thumbnail: {
     width: 368, // this value is relative to list.width - listitem.padding. It can be calculated if theme contains the relative value
     height: 150,
+  },
+  link: {
+    textDecoration: 'none',
   }
 })
 
@@ -37,8 +41,8 @@ const ArticleCardItem = (props) => {
           title=""
         />
         <CardContent className={classes.content}>
-          <Typography variant="title">{item.title}</Typography>
-          <Typography variant="subheading">{item.vertical} {momentstamp}</Typography>
+          <Typography gutterBottom variant="title" className={classes.link} component="a" href="#article">{item.title}</Typography>
+          <Typography variant="subheading" component="a" href="#category" color="textSecondary" className={classes.link}>{item.vertical} | {momentstamp}</Typography>
         </CardContent>
       </div>
     </Card>
