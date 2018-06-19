@@ -1,0 +1,17 @@
+/* articlelist.scss */
+
+@media (min-width: 600px) {
+  [class^="MuiPaper"] {
+    .ArticleCardItem-details-17 {
+      flex-direction: row;
+    }
+    .ArticleCardItem-thumbnail-19 {
+      flex: 1 0 auto;
+      width: 352px;
+      height: 225px;
+    }
+    .ArticleCardItem-content-18 {
+      flex-shrink: 1;
+    }
+  }
+}

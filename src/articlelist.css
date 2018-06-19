@@ -1,18 +1,10 @@
-/* articlelist.css */
-
+/* articlelist.scss */
 @media (min-width: 600px) {
-  .MuiList-root-2.ArticleList-root-1 {
-    max-width: 827px;
-  }
-  .MuiCard-root-20 .ArticleCardItem-details-17 {
-    flex-direction: row;
-  }
-  .MuiCardMedia-root-48.ArticleCardItem-thumbnail-19 {
+  [class^="MuiPaper"] .ArticleCardItem-details-17 {
+    flex-direction: row; }
+  [class^="MuiPaper"] .ArticleCardItem-thumbnail-19 {
     flex: 1 0 auto;
     width: 352px;
-    height: 225px;
-  }
-  .MuiCardContent-root-50.ArticleCardItem-content-18 {
-    flex-shrink: 1;
-  }
-}
+    height: 225px; }
+  [class^="MuiPaper"] .ArticleCardItem-content-18 {
+    flex-shrink: 1; } }
