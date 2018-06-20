@@ -52,12 +52,14 @@ class App extends Component {
 
     return (
       <div className="App">
+        <div className="article-list">
           <ArticleListContainer
             url={endpoint.url}
             sortField="created"
             sortOrder="DESC"
             sortMap={endpoint.sortMap}
           />
+        </div>
       </div>
     );
   }
