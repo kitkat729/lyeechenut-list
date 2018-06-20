@@ -25,6 +25,20 @@ const styles = theme => ({
   },
   link: {
     textDecoration: 'none',
+  },
+  [theme.breakpoints.up('sm')]: {
+    details: {
+      flexDirection: 'row',
+    },
+    content: {
+      flexShrink: 1,
+    },
+    thumbnail: {
+      flex: '1 0 auto',
+      width: 352,
+      height: 225,
+      padding: 0,
+    },
   }
 })
 
