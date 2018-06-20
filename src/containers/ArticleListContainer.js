@@ -1,8 +1,25 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { connect } from 'react-redux'
 import ArticleList from '../components/ArticleList'
 
-export default class ArticleListContainer extends Component {
+import { itemsFetchData } from '../actions';
+
+const mapStateToProps = state => {
+  return {
+    items: state.items,
+    hasError: state.itemsHaveError,
+    isLoading: state.itemsAreLoading
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetch: (url) => dispatch(itemsFetchData(url))
+  };
+};
+
+class ArticleListContainer extends Component {
   constructor(props) {
     super(props)
 
@@ -54,6 +71,9 @@ export default class ArticleListContainer extends Component {
           this.sort(sortOptions)
         }
       }.bind(this))
+
+      // Redux implementation
+      this.props.fetch(this.props.url)
     }
   }
 
@@ -113,3 +133,4 @@ export default class ArticleListContainer extends Component {
 
 }
 
+export default connect(mapStateToProps, mapDispatchToProps)(ArticleListContainer)
