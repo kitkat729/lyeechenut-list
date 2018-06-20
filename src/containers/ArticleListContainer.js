@@ -46,7 +46,7 @@ export default class ArticleListContainer extends Component {
       this.fetch(this.props.url, function(items) {
         this.add(items)
 
-        if (this.props.sortField) {
+        if (this.props.sortMap && this.props.sortField) {
           const sortOptions = {
             field: this.props.sortField,
             order: this.props.sortOrder ? this.props.sortOrder : 'ASC',
@@ -84,7 +84,7 @@ export default class ArticleListContainer extends Component {
 
     let items = this.state.items.slice(0)
 
-    if (this.props.sortMap && !this.props.sortMap.has(field)) {
+    if (!this.props.sortMap.has(field)) {
       throw new Error('"' + field + '" was not mapped properly')
     }
 
