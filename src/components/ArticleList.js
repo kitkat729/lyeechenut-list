@@ -10,16 +10,9 @@ import ArticleCardItem from './ArticleCardItem'
 const styles = theme => ({
   root: {
     width: '100%',
-    maxWidth: 400,
     display: 'flex',
     flexWrap: 'wrap',
-    margin: 'auto',
   },
-  [theme.breakpoints.up('sm')]: {
-    root: {
-      maxWidth: 809
-    }
-  }
 })
 
 function getListItem(item) {

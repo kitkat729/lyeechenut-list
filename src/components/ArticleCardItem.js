@@ -11,6 +11,7 @@ import moment from 'moment'
 const styles = theme => ({
   card: {
     display: 'flex',
+    width: '100%'
   },
   details: {
     display: 'flex',
