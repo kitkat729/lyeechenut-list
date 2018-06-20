@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 
+import SorterContainer from '../containers/SorterContainer'
 import ArticleCardItem from './ArticleCardItem'
 
 const styles = theme => ({
@@ -33,10 +34,12 @@ const ArticleList = (props) => {
   })
 
   return (
+    <SorterContainer selections={props.selections} preselected={props.preselected} >
     <List className={classes.root}>
       {list}
       {props.children}
     </List>
+    </SorterContainer>
   )
 }
 

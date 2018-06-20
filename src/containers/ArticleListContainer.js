@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import moment from 'moment'
 import ArticleList from '../components/ArticleList'
+import SorterContainer from './SorterContainer'
 
 export default class ArticleListContainer extends Component {
   constructor(props) {
@@ -9,9 +10,37 @@ export default class ArticleListContainer extends Component {
 
     this.state = {
       items: [],
-      sortField: props.sortField ? props.sortField : false,
-      sortOrder: props.sortOrder ? props.sortOrder : 'ASC',
       filterArray: props.filterArray ? props.filterArray : [],
+    }
+
+    this.sortSelections = []
+    this.sortPreselected = -1
+
+    // if a sortMap is provided, the list can sort
+    if (this.props.sortMap) {
+      this.props.sortMap.forEach((field, key) => {
+        if (field.orderings) {
+          for (let i in field.orderings) {
+            this.sortSelections.push({
+              field: key,
+              order: field.orderings[i].type,
+              label: field.orderings[i].label,
+              handler: function() {
+                this.sort({
+                  field: key,
+                  order: field.orderings[i].type,
+                })
+              }.bind(this)
+            })
+          }
+        }
+      }, this)
+
+      for(let i in this.sortSelections) {
+        if (this.sortSelections[i].field === this.props.sortField && this.sortSelections[i].order === this.props.sortOrder) {
+          this.sortPreselected = i
+        }
+      }
     }
   }
 
@@ -20,15 +49,12 @@ export default class ArticleListContainer extends Component {
       this.fetch(this.props.url, function(items) {
         this.add(items)
 
-        if (this.state.filterArray.length > 0) {
-          this.filter(this.state.filterArray)
-        }
-        
-        if (this.state.sortField) {
-          this.sort({
-            field: this.state.sortField,
-            order: this.state.sortOrder,
-          })
+        if (this.props.sortField) {
+          const sortOptions = {
+            field: this.props.sortField,
+            order: this.props.sortOrder ? this.props.sortOrder : 'ASC',
+          }
+          this.sort(sortOptions)
         }
       }.bind(this))
     }
@@ -59,45 +85,21 @@ export default class ArticleListContainer extends Component {
   sort(options) {
     const {field, order} = options
 
-    const compareValue = (a, b, order = 'ASC') => {
-      if (order === 'DESC') {
-        let temp = a
-        a = b
-        b = temp
-      }
-
-      return (a < b) ? -1
-              :(a > b) ? 1
-              : 0
-    }
-
     let items = this.state.items.slice(0)
 
-    if (field === 'title') {
-      items.sort(function(a, b) {
-        const itemA = a[field].toLowerCase()
-        const itemB = b[field].toLowerCase()
-
-        return compareValue(itemA, itemB, order)
-      })
-
-      this.setState({
-        items: items
-      })
+    if (this.props.sortMap && !this.props.sortMap.has(field)) {
+      throw new Error('"' + field + '" was not mapped properly')
     }
 
-    if (field === 'created') {
-      items.sort(function(a, b, compare) {
-        const itemA = moment.utc(a[field], "YYYY-MM-DDTHH:mm:ss").format('x')
-        const itemB = moment.utc(b[field], "YYYY-MM-DDTHH:mm:ss").format('x')
-
-        return compareValue(itemA, itemB, order)
-      })
-
-      this.setState({
-        items: items
-      })
+    if (typeof this.props.sortMap.get(field).comparer !== 'function') {
+      throw new Error('"' + field + '" comparer must be a function')
     }
+
+    items.sort(this.props.sortMap.get(field).comparer)
+
+    this.setState({
+      items: (order === 'ASC' || !order) ? items : items.reverse()
+    })
   }
 
   filter(options) {
@@ -116,10 +118,18 @@ export default class ArticleListContainer extends Component {
     })
   }
 
+
   render() {
+    let props = {
+      items: this.state.items,
+      selections: this.sortSelections,
+      preselected: this.sortPreselected,
+    }
+
     return (
-      <ArticleList items={this.state.items} />
+      <ArticleList {...props} />
     )
   }
 
 }
+
