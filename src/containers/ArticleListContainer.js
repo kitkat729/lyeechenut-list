@@ -9,7 +9,6 @@ export default class ArticleListContainer extends Component {
 
     this.state = {
       items: [],
-      filterArray: props.filterArray ? props.filterArray : [],
     }
 
     this.sortSelections = []
@@ -100,23 +99,6 @@ export default class ArticleListContainer extends Component {
       items: (order === 'ASC' || !order) ? items : items.reverse()
     })
   }
-
-  filter(options) {
-    const filterArray = options
-    let items = this.state.items.slice(0)
-    let newItems = [];
-
-    items.forEach( item => {
-      if (filterArray.includes(item.vertical)) {
-        newItems.push(item)
-      }
-    })
-
-    this.setState({
-      items: newItems
-    })
-  }
-
 
   render() {
     let props = {
