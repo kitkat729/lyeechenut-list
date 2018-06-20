@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import moment from 'moment'
 import ArticleList from '../components/ArticleList'
 import SorterContainer from './SorterContainer'
 
