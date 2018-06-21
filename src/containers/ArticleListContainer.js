@@ -23,9 +23,9 @@ class ArticleListContainer extends Component {
   constructor(props) {
     super(props)
 
-    // this.state = {
-    //   items: [],
-    // }
+    this.state = {
+      initialLoad: false,
+    }
 
     this.sortSelections = []
     this.sortPreselected = -1
@@ -53,46 +53,22 @@ class ArticleListContainer extends Component {
         }
       }
     }
+
+    console.log(this.sortSelections[this.sortPreselected])
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.items.length > 0 && !this.state.initialLoad && this.sortPreselected != -1) {
+      this.sortSelections[this.sortPreselected].handler()
+      this.setState({ initialLoad: true })
+    }
   }
 
   componentDidMount() {
     if (this.props.endpoint.url) {
-      // this.fetch(this.props.url, function(items) {
-      //   this.add(items)
-
-      //   if (this.props.sortMap && this.props.sortField) {
-      //     const sortOptions = {
-      //       field: this.props.sortField,
-      //       order: this.props.sortOrder ? this.props.sortOrder : 'ASC',
-      //     }
-      //     this.sort(sortOptions)
-      //   }
-      // }.bind(this))
-
-      // Redux implementation
       this.props.fetch(this.props.endpoint.url, this.props.endpoint.config)
     }
   }
-
-  // sort(options) {
-  //   const {field, order} = options
-
-  //   let items = this.state.items.slice(0)
-
-  //   if (!this.props.endpoint.sortMap.has(field)) {
-  //     throw new Error('"' + field + '" was not mapped properly')
-  //   }
-
-  //   if (typeof this.props.endpoint.sortMap.get(field).comparer !== 'function') {
-  //     throw new Error('"' + field + '" comparer must be a function')
-  //   }
-
-  //   items.sort(this.props.endpoint.sortMap.get(field).comparer)
-
-  //   this.setState({
-  //     items: (order === 'ASC' || !order) ? items : items.reverse()
-  //   })
-  // }
 
   render() {
     let props = {
