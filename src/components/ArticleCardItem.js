@@ -22,7 +22,7 @@ const styles = theme => ({
   },
   thumbnail: {
     height: 0,
-    paddingTop: '56.25%', // 16:9
+    paddingTop: 'calc(1vw*56)'// '56.25%', // 16:9
   },
   link: {
     textDecoration: 'none',
