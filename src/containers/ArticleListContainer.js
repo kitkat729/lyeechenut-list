@@ -1,21 +1,21 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 import { connect } from 'react-redux'
 import ArticleList from '../components/ArticleList'
 
-import { itemsFetchData } from '../actions';
+import { fetchData, sortBy } from '../actions/articleList';
 
 const mapStateToProps = state => {
   return {
-    items: state.items,
-    hasError: state.itemsHaveError,
-    isLoading: state.itemsAreLoading
+    items: state.articleListItems,
+    hasError: state.articleListItemsHaveError,
+    isLoading: state.articleListItemsAreLoading
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetch: (url) => dispatch(itemsFetchData(url))
+    fetch: (url, config = {}) => dispatch(fetchData(url, config)),
+    sortBy: (order, comparer) => dispatch(sortBy(order, comparer)),
   };
 };
 
@@ -23,16 +23,16 @@ class ArticleListContainer extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      items: [],
-    }
+    // this.state = {
+    //   items: [],
+    // }
 
     this.sortSelections = []
     this.sortPreselected = -1
 
     // if a sortMap is provided, the list can sort
-    if (this.props.sortMap) {
-      this.props.sortMap.forEach((field, key) => {
+    if (this.props.endpoint.sortMap) {
+      this.props.endpoint.sortMap.forEach((field, key) => {
         if (field.orderings) {
           for (let i in field.orderings) {
             this.sortSelections.push({
@@ -40,10 +40,7 @@ class ArticleListContainer extends Component {
               order: field.orderings[i].type,
               label: field.orderings[i].label,
               handler: function() {
-                this.sort({
-                  field: key,
-                  order: field.orderings[i].type,
-                })
+                this.props.sortBy(field.orderings[i].type, this.props.endpoint.sortMap.get(key).comparer)
               }.bind(this)
             })
           }
@@ -59,69 +56,47 @@ class ArticleListContainer extends Component {
   }
 
   componentDidMount() {
-    if (this.props.url) {
-      this.fetch(this.props.url, function(items) {
-        this.add(items)
+    if (this.props.endpoint.url) {
+      // this.fetch(this.props.url, function(items) {
+      //   this.add(items)
 
-        if (this.props.sortMap && this.props.sortField) {
-          const sortOptions = {
-            field: this.props.sortField,
-            order: this.props.sortOrder ? this.props.sortOrder : 'ASC',
-          }
-          this.sort(sortOptions)
-        }
-      }.bind(this))
+      //   if (this.props.sortMap && this.props.sortField) {
+      //     const sortOptions = {
+      //       field: this.props.sortField,
+      //       order: this.props.sortOrder ? this.props.sortOrder : 'ASC',
+      //     }
+      //     this.sort(sortOptions)
+      //   }
+      // }.bind(this))
 
       // Redux implementation
-      this.props.fetch(this.props.url)
+      this.props.fetch(this.props.endpoint.url, this.props.endpoint.config)
     }
   }
 
-  add(items) {
-    this.setState({
-      items: this.state.items.concat(items)
-    })
-  }
+  // sort(options) {
+  //   const {field, order} = options
 
-  fetch(url, callback) {
-    axios.get(this.props.url)
-      .then( res => {
-        const articles = res.data
+  //   let items = this.state.items.slice(0)
 
-        if (articles.status) {
-          let items = articles.data.list.map( item => {
-            item.thumbnail = '//assets3.thrillist.com/v1/image/'+item.image_id
-            return item
-          })
+  //   if (!this.props.endpoint.sortMap.has(field)) {
+  //     throw new Error('"' + field + '" was not mapped properly')
+  //   }
 
-          callback(items)
-        }
-      })
-  }
+  //   if (typeof this.props.endpoint.sortMap.get(field).comparer !== 'function') {
+  //     throw new Error('"' + field + '" comparer must be a function')
+  //   }
 
-  sort(options) {
-    const {field, order} = options
+  //   items.sort(this.props.endpoint.sortMap.get(field).comparer)
 
-    let items = this.state.items.slice(0)
-
-    if (!this.props.sortMap.has(field)) {
-      throw new Error('"' + field + '" was not mapped properly')
-    }
-
-    if (typeof this.props.sortMap.get(field).comparer !== 'function') {
-      throw new Error('"' + field + '" comparer must be a function')
-    }
-
-    items.sort(this.props.sortMap.get(field).comparer)
-
-    this.setState({
-      items: (order === 'ASC' || !order) ? items : items.reverse()
-    })
-  }
+  //   this.setState({
+  //     items: (order === 'ASC' || !order) ? items : items.reverse()
+  //   })
+  // }
 
   render() {
     let props = {
-      items: this.state.items,
+      items: this.props.items,
       selections: this.sortSelections,
       preselected: this.sortPreselected,
     }
