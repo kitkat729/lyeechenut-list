@@ -16,10 +16,9 @@ const App = (props) => {
         <div className="article-list">
           <Provider store={store}>
             <ArticleListContainer
-              url={endpoint.url}
+              endpoint={Endpoints.Endpoint1}
               sortField="created"
               sortOrder="DESC"
-              sortMap={endpoint.sortMap}
             />
           </Provider>
         </div>
