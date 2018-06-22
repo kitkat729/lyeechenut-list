@@ -58,7 +58,7 @@ class ArticleListContainer extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.items.length > 0 && !this.state.initialLoad && this.sortPreselected != -1) {
+    if (this.props.items.length > 0 && !this.state.initialLoad && this.sortPreselected !== -1) {
       this.sortSelections[this.sortPreselected].handler()
       this.setState({ initialLoad: true })
     }
